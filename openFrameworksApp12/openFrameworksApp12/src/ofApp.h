@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "../addons/ofxGui/src/ofxGui.h"
 
 
 class ofApp : public ofBaseApp{
@@ -44,5 +45,9 @@ class ofApp : public ofBaseApp{
 		bool validPos;
 
 		ofPoint mouse;
+
+		ofxPanel gui;
+		ofxToggle ortho;
+
 
 };

@@ -4,11 +4,16 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	//box = ofBoxPrimitive();
-	section newSec;
-	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
-	newSec.pos = ofPoint(0,67,0);
-	newSec.rot = 45;
-	lattice.push_back(newSec);
+
+	//section newSec;
+	//newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
+	//newSec.pos = ofPoint(0,67,0);
+	//newSec.rot = 45;
+	//lattice.push_back(newSec);
+	addSection(ofPoint(0, 67, 0), 45);
+	gui.setup();
+	gui.add(ortho.setup("ortho view", false));
+
 
 	ghost.set(10, 190, 100);
 
@@ -16,27 +21,32 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	
+	if (ortho) {
+		easyCam.enableOrtho();
+	}
+	else {
+		easyCam.disableOrtho();
+	}
 	
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	easyCam.begin();
-
+	
 	
 	ofBackground(ofColor::grey);
 	ofSetColor(ofColor::white);
 	ofDrawGrid(100, 50, false, false, true, false);
 	ofNoFill();
-
+	gui.draw();
 	updateGrid();
 	ghost.draw();
 	renderLattice();
 	
 
 
-
+	
 
 	easyCam.end();
 }
@@ -100,8 +110,8 @@ void ofApp::renderLattice() {
 void ofApp::addSection(ofPoint pos, int rot) {
 	section	 newSec;
 	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
-	newSec.pos = currentPos;
-	newSec.rot = currentRot;
+	newSec.pos = pos;
+	newSec.rot = rot;
 
 	lattice.push_back(newSec);
 
