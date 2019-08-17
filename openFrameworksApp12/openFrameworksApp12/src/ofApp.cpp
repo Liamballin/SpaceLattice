@@ -11,18 +11,31 @@ void ofApp::setup(){
 	//newSec.rot = 45;
 	//lattice.push_back(newSec);
 	addSection(ofPoint(0, 67, 0), 45);
+	
 	renderSettings.setup();
+	renderSettings.setName("Render settings");
 	renderSettings.add(ortho.setup("Orthographic view", false));
 	renderSettings.add(showGrid.setup("Show grid", true));
 
+	info.setup();
+	info.setName("Info");
+	segCount.set("Segment count", (int)lattice.size() , 0, 100);
+	info.add(segCount);
+	info.add(buildMode.setup("Build mode on/off", true));
+
+	buildTools.setup();
+	buildTools.setName("Build mode");
+	buildTools.add(guideWidth.setup("Guide grid x size", 10, 1, 50));
+	buildTools.add(guideHeight.setup("Guide grid y size", 5, 1, 50));
+
+	renderSettings.setPosition(50, 0);
+	info.setPosition(50, 100);
+	buildTools.setPosition(50, 200);
 
 	ghost.set(10, 190, 100);
 
-	//easyCam.setOrientation(-27.8906, -26.0156, -4.75018e-07);
 	easyCam.setPosition(-546.738, 659.731, 1120.2);
 	easyCam.setTarget(ofPoint(0, 0, 0));
-		/*Angle*/ 
-		//pos - 546.738, 659.731, 1120.2
 
 	dragging = false;
 
@@ -53,8 +66,11 @@ void ofApp::draw(){
 		ofDrawGrid(100, 50, false, false, true, false);
 	}
 
-	updateGrid();
-	ghost.draw();
+	if (buildMode) {
+		updateGrid();
+		ghost.draw();
+	}
+	
 	renderLattice();
 	
 
@@ -63,6 +79,10 @@ void ofApp::draw(){
 	
 	easyCam.end();
 	renderSettings.draw();
+	info.draw();
+	if (buildMode) {
+		buildTools.draw();
+	}
 }
 
 //----------------------------------
@@ -70,14 +90,14 @@ void ofApp::draw(){
 void ofApp::updateGrid() {
 	float size = 134;
 	//Generate grid and test mouse pos
-	int width = 10;
-	int height = 5;
+	int width = guideWidth;
+	int height = guideHeight;
 	float offset = (135 * (width / 4))*-1;
 	ofPoint closest;
 	float closestDistance;
 
-	for (unsigned int bx = 0; bx < 5; bx++) {
-		for (unsigned int by = 0; by < 5; by++) {
+	for (unsigned int bx = 0; bx < width; bx++) {
+		for (unsigned int by = 0; by < height; by++) {
 			float x = (bx * size) + offset;
 			float y = (by * size) + (size / 2);
 
@@ -112,15 +132,12 @@ void ofApp::updateGrid() {
 
 void ofApp::renderLattice() {
 	for (unsigned int i = 0; i < lattice.size(); i++) {
-		//ofPoint pos = lattice[i].pos;
-		//int rot = lattice[i].rot;
-		//ofColor col = lattice[i].color;
-		//ofSetColor(col);
-		//ofTranslate(pos.x, pos.y, pos.z);
-		//ofRotateZDeg(rot);
-		//ofDrawBox(10, 190, 100);
-		//ofRotateZDeg(-rot);
-		//ofTranslate(-pos.x, -pos.y, -pos.z);
+
+		ofSetColor(lattice[i].color);
+		ofNoFill();
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	
 		lattice[i].mesh.draw();
 	}
 }
@@ -132,9 +149,13 @@ void ofApp::addSection(ofPoint pos, int rot) {
 	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
 	newSec.pos = pos;
 	newSec.rot = rot;
+	/*for (int s = 0; s < 6; s++) {
+		newSec.mesh.setSideColor(s, ofColor(ofRandom(255), ofRandom(255), ofRandom(255)));
+	}*/
 
 
 	lattice.push_back(newSec);
+	segCount.set("Segment count", (int)lattice.size(), 0, 100);
 
 }
 
@@ -165,11 +186,15 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-	if (!dragging) {
-		addSection(currentPos, currentRot);
+	if (buildMode) {
+		if (!dragging) {
+			addSection(currentPos, currentRot);
+		}
+		else {
+			dragging = false;
+		}
 	}
 	else {
-		dragging = false;
 
 	}
 }

@@ -51,6 +51,14 @@ class ofApp : public ofBaseApp{
 		ofxToggle ortho;
 		ofxToggle showGrid;
 
+		ofxPanel info;
+		ofParameter<int> segCount;
+		ofxToggle buildMode;
+
+		ofxPanel buildTools;
+		ofxIntSlider guideHeight;
+		ofxIntSlider guideWidth;
+
 		bool dragging;
 
 
