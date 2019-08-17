@@ -47,8 +47,11 @@ class ofApp : public ofBaseApp{
 
 		ofPoint mouse;
 
-		ofxPanel gui;
+		ofxPanel renderSettings;
 		ofxToggle ortho;
+		ofxToggle showGrid;
+
+		bool dragging;
 
 
 };

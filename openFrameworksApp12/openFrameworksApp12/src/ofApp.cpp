@@ -11,11 +11,20 @@ void ofApp::setup(){
 	//newSec.rot = 45;
 	//lattice.push_back(newSec);
 	addSection(ofPoint(0, 67, 0), 45);
-	gui.setup();
-	gui.add(ortho.setup("ortho view", false));
+	renderSettings.setup();
+	renderSettings.add(ortho.setup("Orthographic view", false));
+	renderSettings.add(showGrid.setup("Show grid", true));
 
 
 	ghost.set(10, 190, 100);
+
+	//easyCam.setOrientation(-27.8906, -26.0156, -4.75018e-07);
+	easyCam.setPosition(-546.738, 659.731, 1120.2);
+	easyCam.setTarget(ofPoint(0, 0, 0));
+		/*Angle*/ 
+		//pos - 546.738, 659.731, 1120.2
+
+	dragging = false;
 
 }
 
@@ -32,14 +41,18 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	easyCam.begin();
 	
 	
 	ofBackground(ofColor::grey);
 	ofSetColor(ofColor::white);
-	ofDrawGrid(100, 50, false, false, true, false);
 	ofNoFill();
-	//gui.draw();
+	
+	easyCam.begin();
+
+	if (showGrid) {
+		ofDrawGrid(100, 50, false, false, true, false);
+	}
+
 	updateGrid();
 	ghost.draw();
 	renderLattice();
@@ -47,9 +60,12 @@ void ofApp::draw(){
 
 
 	
-
+	
 	easyCam.end();
+	renderSettings.draw();
 }
+
+//----------------------------------
 
 void ofApp::updateGrid() {
 	float size = 134;
@@ -139,7 +155,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	dragging = true;
 }
 
 //--------------------------------------------------------------
@@ -149,7 +165,13 @@ void ofApp::mousePressed(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-	addSection(currentPos, currentRot);
+	if (!dragging) {
+		addSection(currentPos, currentRot);
+	}
+	else {
+		dragging = false;
+
+	}
 }
 
 //--------------------------------------------------------------
