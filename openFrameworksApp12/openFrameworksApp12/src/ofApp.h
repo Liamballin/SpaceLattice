@@ -10,6 +10,7 @@ class ofApp : public ofBaseApp{
 		ofPoint pos;
 		ofColor color;
 		int rot;
+		int id;
 	};
 
 	public:
@@ -20,6 +21,7 @@ class ofApp : public ofBaseApp{
 		void updateGrid();
 		void renderLattice();
 		void addSection(ofPoint pos, int rot);
+		void inspectMode();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -37,6 +39,7 @@ class ofApp : public ofBaseApp{
 		ofEasyCam easyCam;
 		vector<section>lattice;
 		section ghostSec;
+		section inspected;
 
 		ofBoxPrimitive ghost;
 

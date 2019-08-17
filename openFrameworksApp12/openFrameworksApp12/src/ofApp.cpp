@@ -69,6 +69,10 @@ void ofApp::draw(){
 	if (buildMode) {
 		updateGrid();
 		ghost.draw();
+		ofDrawAxis(100);
+	}
+	else {
+		inspectMode();
 	}
 	
 	renderLattice();
@@ -86,6 +90,21 @@ void ofApp::draw(){
 }
 
 //----------------------------------
+
+void ofApp::inspectMode() {
+	float closest;
+	for (unsigned int i = 0; i < lattice.size(); i++) {
+		ofPoint cur = easyCam.worldToScreen(lattice[i].pos);
+		float distance = cur.distance(mouse);
+		if (i == 0 || distance < closest) {
+			closest = distance;
+			inspected = lattice[i];
+		}
+
+	}
+	std::cout << inspected.id << endl;
+	ofDrawLine(inspected.pos,easyCam.screenToWorld(mouse));
+}
 
 void ofApp::updateGrid() {
 	float size = 134;
@@ -132,8 +151,18 @@ void ofApp::updateGrid() {
 
 void ofApp::renderLattice() {
 	for (unsigned int i = 0; i < lattice.size(); i++) {
-
-		ofSetColor(lattice[i].color);
+		if (buildMode) {
+			ofSetColor(lattice[i].color);
+		}
+		else {
+			if (lattice[i].id != inspected.id) {
+				ofSetColor(ofColor::cornsilk);
+			}
+			else {
+				ofSetColor(ofColor::red);
+			}
+		}
+		
 		ofNoFill();
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -141,6 +170,7 @@ void ofApp::renderLattice() {
 		lattice[i].mesh.draw();
 	}
 }
+
 void ofApp::addSection(ofPoint pos, int rot) {
 	section	 newSec;
 	newSec.mesh.set(10, 190, 100);
@@ -149,10 +179,8 @@ void ofApp::addSection(ofPoint pos, int rot) {
 	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
 	newSec.pos = pos;
 	newSec.rot = rot;
-	/*for (int s = 0; s < 6; s++) {
-		newSec.mesh.setSideColor(s, ofColor(ofRandom(255), ofRandom(255), ofRandom(255)));
-	}*/
 
+	newSec.id = lattice.size() + 1;
 
 	lattice.push_back(newSec);
 	segCount.set("Segment count", (int)lattice.size(), 0, 100);
