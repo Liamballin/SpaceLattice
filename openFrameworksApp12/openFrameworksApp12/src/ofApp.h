@@ -6,6 +6,7 @@
 
 class ofApp : public ofBaseApp{
 	struct section {
+		ofBoxPrimitive mesh;
 		ofPoint pos;
 		ofColor color;
 		int rot;

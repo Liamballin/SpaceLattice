@@ -39,7 +39,7 @@ void ofApp::draw(){
 	ofSetColor(ofColor::white);
 	ofDrawGrid(100, 50, false, false, true, false);
 	ofNoFill();
-	gui.draw();
+	//gui.draw();
 	updateGrid();
 	ghost.draw();
 	renderLattice();
@@ -96,22 +96,27 @@ void ofApp::updateGrid() {
 
 void ofApp::renderLattice() {
 	for (unsigned int i = 0; i < lattice.size(); i++) {
-		ofPoint pos = lattice[i].pos;
-		int rot = lattice[i].rot;
-		ofColor col = lattice[i].color;
-		ofSetColor(col);
-		ofTranslate(pos.x, pos.y, pos.z);
-		ofRotateZDeg(rot);
-		ofDrawBox(10, 190, 100);
-		ofRotateZDeg(-rot);
-		ofTranslate(-pos.x, -pos.y, -pos.z);
+		//ofPoint pos = lattice[i].pos;
+		//int rot = lattice[i].rot;
+		//ofColor col = lattice[i].color;
+		//ofSetColor(col);
+		//ofTranslate(pos.x, pos.y, pos.z);
+		//ofRotateZDeg(rot);
+		//ofDrawBox(10, 190, 100);
+		//ofRotateZDeg(-rot);
+		//ofTranslate(-pos.x, -pos.y, -pos.z);
+		lattice[i].mesh.draw();
 	}
 }
 void ofApp::addSection(ofPoint pos, int rot) {
 	section	 newSec;
+	newSec.mesh.set(10, 190, 100);
+	newSec.mesh.rollDeg(rot);
+	newSec.mesh.setPosition(pos);
 	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
 	newSec.pos = pos;
 	newSec.rot = rot;
+
 
 	lattice.push_back(newSec);
 
