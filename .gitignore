@@ -1,0 +1,13 @@
+*.exe
+*.dll
+*.ilk
+*.exp
+*.lib
+*.pdb
+obj/
+bin/
+.vs/
+*.make
+*.user
+*.db
+*.ipch
