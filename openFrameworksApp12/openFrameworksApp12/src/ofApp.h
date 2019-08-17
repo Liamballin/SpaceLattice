@@ -2,13 +2,6 @@
 
 #include "ofMain.h"
 
-class part : public ofBaseApp {
-	public:
-		void draw();
-		void setup();
-		ofPoint pos();
-
-};
 
 class ofApp : public ofBaseApp{
 	struct section {
@@ -21,6 +14,10 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+
+		void updateGrid();
+		void renderLattice();
+		void addSection(ofPoint pos, int rot);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
