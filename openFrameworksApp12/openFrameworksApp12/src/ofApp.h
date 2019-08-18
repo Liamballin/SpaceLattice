@@ -11,6 +11,9 @@ class ofApp : public ofBaseApp{
 		ofColor color;
 		int rot;
 		int id;
+		//bool on;
+		ofParameter<bool> on;
+		ofxPanel gui;
 	};
 
 	public:
@@ -22,6 +25,7 @@ class ofApp : public ofBaseApp{
 		void renderLattice();
 		void addSection(ofPoint pos, int rot);
 		void inspectMode();
+		void setupGui();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -35,11 +39,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		void drawBox(float x, float y, float z, float deg);
+
+		ofxPanel currentGui;
 			
 		ofEasyCam easyCam;
 		vector<section>lattice;
 		section ghostSec;
 		section inspected;
+
+		int latticeInspect;
 
 		ofBoxPrimitive ghost;
 
@@ -61,6 +69,10 @@ class ofApp : public ofBaseApp{
 		ofxPanel buildTools;
 		ofxIntSlider guideHeight;
 		ofxIntSlider guideWidth;
+
+		ofxPanel cursorInfo;
+		ofParameter<char> id;
+		ofxToggle segment_on;
 
 		bool dragging;
 

@@ -3,34 +3,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//box = ofBoxPrimitive();
 
-	//section newSec;
-	//newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
-	//newSec.pos = ofPoint(0,67,0);
-	//newSec.rot = 45;
-	//lattice.push_back(newSec);
-	addSection(ofPoint(0, 67, 0), 45);
-	
-	renderSettings.setup();
-	renderSettings.setName("Render settings");
-	renderSettings.add(ortho.setup("Orthographic view", false));
-	renderSettings.add(showGrid.setup("Show grid", true));
-
-	info.setup();
-	info.setName("Info");
-	segCount.set("Segment count", (int)lattice.size() , 0, 100);
-	info.add(segCount);
-	info.add(buildMode.setup("Build mode on/off", true));
-
-	buildTools.setup();
-	buildTools.setName("Build mode");
-	buildTools.add(guideWidth.setup("Guide grid x size", 10, 1, 50));
-	buildTools.add(guideHeight.setup("Guide grid y size", 5, 1, 50));
-
-	renderSettings.setPosition(50, 0);
-	info.setPosition(50, 100);
-	buildTools.setPosition(50, 200);
+	//addSection(ofPoint(0, 67, 0), 45);
+	latticeInspect = 0;
+	setupGui();
 
 	ghost.set(10, 190, 100);
 
@@ -38,6 +14,7 @@ void ofApp::setup(){
 	easyCam.setTarget(ofPoint(0, 0, 0));
 
 	dragging = false;
+	
 
 }
 
@@ -49,7 +26,8 @@ void ofApp::update(){
 	else {
 		easyCam.disableOrtho();
 	}
-	
+	currentGui.setPosition(easyCam.worldToScreen(mouse));
+
 }
 
 //--------------------------------------------------------------
@@ -72,20 +50,35 @@ void ofApp::draw(){
 		ofDrawAxis(100);
 	}
 	else {
+
 		inspectMode();
+		
 	}
 	
 	renderLattice();
 	
 
-
-	
 	
 	easyCam.end();
+
 	renderSettings.draw();
 	info.draw();
 	if (buildMode) {
 		buildTools.draw();
+	}
+
+	else {
+		//segment_on.setup("Lights on", inspected.on);
+		if (lattice.size() > 0) {
+			ofDrawBitmapStringHighlight(ofToString(lattice[latticeInspect].on), mouse + 50);
+		}
+		for (unsigned int i = 0; i < lattice.size(); i++) {
+			ofDrawBitmapStringHighlight(ofToString(lattice[i].id), easyCam.worldToScreen(lattice[i].pos));
+
+		}
+		//ofDrawBitmapStringHighlight()
+
+		//cursorInfo.draw();
 	}
 }
 
@@ -93,17 +86,19 @@ void ofApp::draw(){
 
 void ofApp::inspectMode() {
 	float closest;
+	ofxPanel gui;
 	for (unsigned int i = 0; i < lattice.size(); i++) {
 		ofPoint cur = easyCam.worldToScreen(lattice[i].pos);
 		float distance = cur.distance(mouse);
 		if (i == 0 || distance < closest) {
 			closest = distance;
 			inspected = lattice[i];
+			gui = lattice[i].gui;
+			latticeInspect = i;
 		}
-
 	}
-	std::cout << inspected.id << endl;
 	ofDrawLine(inspected.pos,easyCam.screenToWorld(mouse));
+
 }
 
 void ofApp::updateGrid() {
@@ -115,8 +110,8 @@ void ofApp::updateGrid() {
 	ofPoint closest;
 	float closestDistance;
 
-	for (unsigned int bx = 0; bx < width; bx++) {
-		for (unsigned int by = 0; by < height; by++) {
+	for ( int bx = 0; bx < width; bx++) {
+		for ( int by = 0; by < height; by++) {
 			float x = (bx * size) + offset;
 			float y = (by * size) + (size / 2);
 
@@ -156,8 +151,13 @@ void ofApp::renderLattice() {
 		}
 		else {
 			if (lattice[i].id != inspected.id) {
-				ofSetColor(ofColor::cornsilk);
-			}
+				if (lattice[i].on) {
+					ofSetColor(ofColor::orange);
+				}
+				else {
+					ofSetColor(ofColor::cornsilk);
+				}
+				}
 			else {
 				ofSetColor(ofColor::red);
 			}
@@ -179,12 +179,45 @@ void ofApp::addSection(ofPoint pos, int rot) {
 	newSec.color = ofColor(ofRandom(255), ofRandom(255), 255);
 	newSec.pos = pos;
 	newSec.rot = rot;
-
+	newSec.on = false;
 	newSec.id = lattice.size() + 1;
+	//newSec.gui.setup();
+	//newSec.gui.setName(to_string(newSec.id));
+	//newSec.gui.add(newSec.on.set("on", false));
+
+	
 
 	lattice.push_back(newSec);
 	segCount.set("Segment count", (int)lattice.size(), 0, 100);
 
+}
+
+void ofApp::setupGui() {
+	renderSettings.setup();
+	renderSettings.setName("Render settings");
+	renderSettings.add(ortho.setup("Orthographic view", false));
+	renderSettings.add(showGrid.setup("Show grid", true));
+
+	info.setup();
+	info.setName("Info");
+	segCount.set("Segment count", (int)lattice.size(), 0, 100);
+	info.add(segCount);
+	info.add(buildMode.setup("Build mode on/off", true));
+
+	buildTools.setup();
+	buildTools.setName("Build mode");
+	buildTools.add(guideWidth.setup("Guide grid x size", 10, 1, 50));
+	buildTools.add(guideHeight.setup("Guide grid y size", 5, 1, 50));
+
+	//cursorInfo.setup();
+	//cursorInfo.setName("Segment");
+	//cursorInfo.add(segment_on.setup("Lights on", lattice[latticeInspect].on));
+
+
+
+	renderSettings.setPosition(50, 0);
+	info.setPosition(50, 100);
+	buildTools.setPosition(50, 200);
 }
 
 //--------------------------------------------------------------
@@ -213,7 +246,7 @@ void ofApp::mousePressed(int x, int y, int button){
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 	if (buildMode) {
 		if (!dragging) {
 			addSection(currentPos, currentRot);
@@ -222,8 +255,22 @@ void ofApp::mouseReleased(int x, int y, int button){
 			dragging = false;
 		}
 	}
-	else {
+	else{
+		if (!dragging) {
+			//inspect mode
+			if (lattice[latticeInspect].on) {
+				lattice[latticeInspect].on = false;
+				std::cout << "Turning off " << inspected.id << endl;
+			}
+			else {
+				std::cout << "Turning on " << inspected.id << endl;
+				lattice[latticeInspect].on = true;
 
+			}
+		}
+		else {
+			dragging = false;
+		}
 	}
 }
 
