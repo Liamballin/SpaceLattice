@@ -76,5 +76,11 @@ class ofApp : public ofBaseApp{
 
 		bool dragging;
 
+		ofSerial serial;
+		bool lastState;
+		unsigned char b1;
+		unsigned char b2;
+
+
 
 };
