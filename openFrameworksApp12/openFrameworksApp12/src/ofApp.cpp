@@ -4,14 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-	serial.listDevices();
-	vector <ofSerialDeviceInfo> deviceList = serial.getDeviceList();
-	//for (int i = 0; i < deviceList.size(); i++) {
-	//	std::cout << to_string(deviceList[i]) << endl;
-
-	//}
-	int baud = 9600;
-	serial.setup(0, baud);
+	
 
 	//addSection(ofPoint(0, 67, 0), 45);
 	latticeInspect = 0;
@@ -23,10 +16,9 @@ void ofApp::setup(){
 	easyCam.setTarget(ofPoint(0, 0, 0));
 
 	dragging = false;
-	lastState = false;
-	b1 = 255;
-	b2 = 0;
-	
+
+	serial.setup(9600);
+
 
 }
 
@@ -40,22 +32,7 @@ void ofApp::update(){
 	}
 	currentGui.setPosition(easyCam.worldToScreen(mouse));
 
-	if (lattice.size() > 0) {
-		if (lattice[0].on != lastState) {
-			if (lattice[0].on) {
-
-				serial.writeByte(b1);
-				std::cout << "Sending byte " << b1 << endl;
-
-			}
-			else {
-				serial.writeByte(b2);
-				std::cout << "Sending byte " << b2 << endl;
-
-			}
-		}
-		lastState = lattice[0].on;
-	}
+	serial.update(lattice);
 }
 
 //--------------------------------------------------------------
@@ -121,7 +98,6 @@ void ofApp::inspectMode() {
 		if (i == 0 || distance < closest) {
 			closest = distance;
 			inspected = lattice[i];
-			gui = lattice[i].gui;
 			latticeInspect = i;
 		}
 	}
@@ -178,17 +154,17 @@ void ofApp::renderLattice() {
 			ofSetColor(lattice[i].color);
 		}
 		else {
-			if (lattice[i].id != inspected.id) {
+		//	if (lattice[i].id != inspected.id) {
 				if (lattice[i].on) {
 					ofSetColor(ofColor::orange);
 				}
 				else {
 					ofSetColor(ofColor::cornsilk);
 				}
-				}
-			else {
-				ofSetColor(ofColor::red);
-			}
+			//	}
+		//	else {
+			//	ofSetColor(ofColor::red);
+			//}
 		}
 		
 		ofNoFill();

@@ -198,6 +198,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxVectorGraphics\libs;%(AdditionalIncludeDi
     <ClCompile Include="D:\of_v0.10.1_vs2017_release\addons\ofxVectorGraphics\src\ofxVectorGraphics.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
+    <ClCompile Include="src\Serial.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\of_v0.10.1_vs2017_release\addons\ofxGui\src\ofxBaseGui.h" />
@@ -215,6 +216,7 @@ D:\of_v0.10.1_vs2017_release\addons\ofxVectorGraphics\libs;%(AdditionalIncludeDi
     <ClInclude Include="D:\of_v0.10.1_vs2017_release\addons\ofxVectorGraphics\libs\CreEPS_Types.hpp" />
     <ClInclude Include="D:\of_v0.10.1_vs2017_release\addons\ofxVectorGraphics\src\ofxVectorGraphics.h" />
     <ClInclude Include="src\ofApp.h" />
+    <ClInclude Include="src\Serial.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">

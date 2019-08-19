@@ -2,21 +2,24 @@
 
 #include "ofMain.h"
 #include "../addons/ofxGui/src/ofxGui.h"
+#include "Serial.h"
 
 
 class ofApp : public ofBaseApp{
-	struct section {
-		ofBoxPrimitive mesh;
-		ofPoint pos;
-		ofColor color;
-		int rot;
-		int id;
-		//bool on;
-		ofParameter<bool> on;
-		ofxPanel gui;
-	};
+
 
 	public:
+
+
+		//struct section {
+		//	ofBoxPrimitive mesh;
+		//	ofPoint pos;
+		//	ofColor color;
+		//	int rot;
+		//	int id;
+		//	bool on;
+		//};
+		typedef Serial::section section;
 		void setup();
 		void update();
 		void draw();
@@ -76,10 +79,9 @@ class ofApp : public ofBaseApp{
 
 		bool dragging;
 
-		ofSerial serial;
-		bool lastState;
-		unsigned char b1;
-		unsigned char b2;
+		Serial serial;
+
+
 
 
 
